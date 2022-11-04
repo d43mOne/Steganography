@@ -1,24 +1,19 @@
-from PIL import Image
+import codecs
 import binascii
 import optparse
-import codecs
+from PIL import Image
 from bitstring import BitArray
 
+from util.constant import SUCCESS, FAILURE, BOLD, END
 
-success = '\33[92m'
-failure = '\33[91m'
-bold = '\33[1m'
-end = '\33[0m'
+
 
 # Reformats rgb value of pixel into hexadecimal
-
-
 def rgb2hex(r, g, b):
     return '#{:02x}{:02x}{:02x}'.format(r, g, b)
 
+
 # decodes tuple of hex while stripping away the # at the beginning and revealing just rgb values
-
-
 def hex2rgb(hexcode):
     if hexcode is None:
         return None
@@ -49,31 +44,27 @@ def bit2hex(bitstring):
     hexcode = hexcode.replace('0x', '#')
     return (hexcode)
 
+
 # encodes message into byte form and then turns message into binary while ignoring the '0b' value in the beginning
-
-
 def str2bin(message):
     binary = bin(int(binascii.hexlify(message.encode()), 16))
     return binary[2:]
 
+
 # adds the '0b' back to the binary, transforms it into readable bytes and decodes it into utf-8 to be read as string
-
-
 def bin2str(binary):
     binary = int(('0b' + binary), 2)
     message = binary.to_bytes((binary.bit_length() + 7) // 8, 'big').decode()
     return message
 
+
 # replaces last value of the rgb hexcode with the binary digit of the message
-
-
 def encode(bitstring, digit):
     bitstring = bitstring[:-1] + digit
     return bitstring
 
+
 # looks at the last digit of the rgb hexcode and returns it to be added to binary
-
-
 def decode(bitstring):
     if bitstring[-1] in ('0', '1'):
         return bitstring[-1]
@@ -118,10 +109,10 @@ def hide(filename, message):
         # add the new data to the image
         img.putdata(newData)
         img.save(filename, 'PNG')
-        return f'\n{success}[+] COMPLETED!{end}\n'
+        return f'\n{SUCCESS}[+] COMPLETED!{END}\n'
 
     else:
-        return f'\n{failure}[-] Incorrect image mode, could not hide.{end}\n'
+        return f'\n{FAILURE}[-] Incorrect image mode, could not hide.{END}\n'
 
 
 def retr(filename):
@@ -139,13 +130,13 @@ def retr(filename):
             else:
                 binary = binary + digit
                 if((binary[-16:]) == '1111111111111110'):
-                    print(f'\n{success}[+] Success!{end}')
+                    print(f'\n{SUCCESS}[+] Success!{END}')
                     return bin2str(binary[:-16])
 
         return bin2str(binary)
 
     else:
-        return f'{failure}[-] Incorrect image mode, could not retrieve.{end}\n'
+        return f'{FAILURE}[-] Incorrect image mode, could not retrieve.{END}\n'
 
 
 def Main():
@@ -167,10 +158,10 @@ def Main():
     (option, args) = parser.parse_args()
 
     if(option.hide != None):
-        text = input(f"{bold}Enter a message to hide:{end} ")
+        text = input(f"{BOLD}Enter a message to hide:{END} ")
         print(hide(option.hide, text))
     elif(option.retr != None):
-        print(f"\n{bold}[+] Message:{end} "+retr(option.retr)+"\n")
+        print(f"\n{BOLD}[+] Message:{END} "+retr(option.retr)+"\n")
     else:
         print(parser.usage)
         exit(0)
