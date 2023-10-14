@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 ### 1. Hiding/Encoding text in image: 
 ```vim
-python steg.py -e <IMAGE PATH>
+python steg.py -e <IMAGE_PATH>
 ```
 <img src = 'Assets/ss1.png' width=50%>
 
@@ -20,6 +20,6 @@ python steg.py -e <IMAGE PATH>
 
 ### 2. Retriving message from image:
 ```vim
-python steg.py -d <ENCODED IMAGE PATH>
+python steg.py -d <ENCODED IMAGE_PATH>
 ```
 <img src = 'Assets/ss2.png' width=50%>
